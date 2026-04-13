@@ -76,7 +76,62 @@ nav a:hover .nav-tip{opacity:1;left:44px;}
 .profile-wrap:hover .profile-ring::before{opacity:1;}
 .profile-wrap:hover .profile-ring{transform:scale(1.05);box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 100px rgba(0,242,255,.2);}
 .profile-ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
-.hi-bubble{position:absolute;top:-16px;right:-30px;background:#fff;color:#000;padding:12px 24px;border-radius:24px 24px 24px 0;font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;display:none;z-index:10;pointer-events:none;}
+
+/* ── HI BUBBLE (redesigned as About Me popup) ── */
+.hi-bubble{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  background:rgba(5,5,5,.95);
+  border:1px solid var(--accent);
+  border-radius:20px;
+  padding:36px 40px;
+  max-width:520px;width:90%;
+  z-index:9998;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .35s,transform .35s cubic-bezier(.16,1,.3,1);
+  backdrop-filter:blur(30px);
+  box-shadow:0 0 80px rgba(0,242,255,.15),0 30px 80px rgba(0,0,0,.8);
+}
+.hi-bubble.show{
+  opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto;
+}
+.hi-bubble-close{
+  position:absolute;top:16px;right:20px;
+  background:none;border:1px solid var(--border);
+  color:var(--text-dim);font-size:18px;width:32px;height:32px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  cursor:none;transition:.2s;
+}
+.hi-bubble-close:hover{border-color:var(--neon-p);color:var(--neon-p);}
+.hi-bubble-name{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:2.2rem;font-weight:700;
+  letter-spacing:-1px;margin-bottom:6px;
+}
+.hi-bubble-name span{color:var(--accent);}
+.hi-bubble-role{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:20px;
+}
+.hi-bubble-text{
+  font-size:13.5px;line-height:1.9;color:var(--text-dim);
+}
+.hi-bubble-text strong{color:var(--text-main);}
+.hi-bubble-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+.hi-chip{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  border:1px solid var(--border);padding:5px 12px;border-radius:20px;
+  color:var(--text-dim);
+}
+.hi-chip.a{border-color:rgba(0,242,255,.4);color:var(--accent);}
+.hi-chip.b{border-color:rgba(112,0,255,.4);color:#b47aff;}
+.hi-chip.c{border-color:rgba(255,0,122,.4);color:#ff6faa;}
+.hi-overlay{
+  position:fixed;inset:0;z-index:9997;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.hi-overlay.show{opacity:1;pointer-events:auto;}
 
 .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:-3px;margin-bottom:10px;}
 .hero h1 span{color:var(--accent);}
@@ -89,23 +144,63 @@ nav a:hover .nav-tip{opacity:1;left:44px;}
 .scroll-line::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--accent);animation:scanLine 2s ease-in-out infinite;}
 @keyframes scanLine{0%{left:-100%}100%{left:100%}}
 
-/* ── PANDA MASCOT ── */
+/* ── PANDA MASCOT (improved) ── */
 .panda-wrap{
   position:fixed;bottom:30px;right:30px;z-index:800;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
   animation:pandaBob 3s ease-in-out infinite;
 }
-@keyframes pandaBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes pandaBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
 .panda-speech{
-  background:rgba(0,0,0,.85);border:1px solid var(--accent);
+  background:rgba(5,5,5,.92);
+  border:1px solid var(--accent);
   border-radius:16px 16px 16px 4px;
-  padding:10px 16px;font-size:11px;letter-spacing:1px;
-  color:var(--accent);white-space:nowrap;
-  opacity:0;transition:opacity .4s;
-  max-width:180px;text-align:center;line-height:1.5;
+  padding:12px 18px;font-size:11.5px;letter-spacing:.5px;
+  color:var(--accent);
+  max-width:200px;text-align:center;line-height:1.6;
+  opacity:0;transition:opacity .4s, transform .3s;
+  transform:translateY(6px);
+  box-shadow:0 8px 30px rgba(0,242,255,.15);
+  white-space:pre-line;
 }
-.panda-wrap:hover .panda-speech{opacity:1;}
-.panda-svg{width:90px;height:90px;cursor:none;filter:drop-shadow(0 0 12px rgba(0,242,255,.3));}
+.panda-speech.visible{opacity:1;transform:translateY(0);}
+.panda-btn{
+  background:none;border:none;
+  filter:drop-shadow(0 0 16px rgba(0,242,255,.35));
+  transition:filter .3s,transform .2s;
+  width:100px;height:110px;
+}
+.panda-btn:hover{filter:drop-shadow(0 0 24px rgba(0,242,255,.6));}
+.panda-btn:active{transform:scale(.95);}
+
+/* ── ABOUT ME SECTION ── */
+#about{margin-bottom:100px;}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:10px;}
+.about-text{font-size:14.5px;line-height:1.95;color:var(--text-dim);}
+.about-text p{margin-bottom:16px;}
+.about-text strong{color:var(--text-main);}
+.about-highlight{
+  border:1px solid var(--border);border-radius:16px;
+  padding:32px;background:var(--glass);
+  display:flex;flex-direction:column;gap:20px;
+}
+.about-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.about-stat{
+  border:1px solid var(--border);border-radius:12px;
+  padding:18px;background:rgba(0,242,255,.03);
+  text-align:center;
+}
+.about-stat-num{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--accent);}
+.about-stat-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-top:4px;}
+.about-joining{
+  border:1px solid rgba(0,242,255,.25);border-radius:12px;
+  padding:20px;background:rgba(0,242,255,.04);
+  display:flex;align-items:center;gap:16px;
+}
+.about-joining-icon{width:40px;height:40px;border-radius:10px;background:rgba(0,242,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.about-joining-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;}
+.about-joining-val{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;line-height:1.4;}
+.about-joining-date{font-size:10px;color:var(--accent);margin-top:2px;letter-spacing:1px;}
 
 /* ── CONTAINER ── */
 .container{max-width:1050px;margin:0 auto;padding:100px 30px 100px 100px;}
@@ -255,7 +350,7 @@ footer{border-top:1px solid var(--border);padding:36px 60px;display:flex;justify
 
 @media(max-width:860px){
   .container{padding:100px 24px 60px;}
-  .thoughts-grid,.contact-wrap,.coding-grid{grid-template-columns:1fr;}
+  .thoughts-grid,.contact-wrap,.coding-grid,.about-grid{grid-template-columns:1fr;}
   .thought-card.wide{grid-column:span 1;grid-template-columns:1fr;}
   .quick-links{flex-direction:column;align-items:center;}
   footer{flex-direction:column;gap:16px;text-align:center;}
@@ -295,64 +390,157 @@ footer{border-top:1px solid var(--border);padding:36px 60px;display:flex;justify
 <!-- SIDE LABEL -->
 <div class="side-label">CSE // 2028</div>
 
-<!-- ═══ CUTE PANDA MASCOT ═══ -->
-<div class="panda-wrap" id="pandaWrap" onclick="pandaTalk()">
-  <div class="panda-speech" id="pandaSpeech">Hi! I'm Panda <br>Kruthi's coding buddy!</div>
-  <svg class="panda-svg" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="22" cy="24" rx="14" ry="14" fill="#1a1a1a" stroke="rgba(0,242,255,0.3)" stroke-width="0.8"/>
-    <ellipse cx="78" cy="24" rx="14" ry="14" fill="#1a1a1a" stroke="rgba(0,242,255,0.3)" stroke-width="0.8"/>
-    <ellipse cx="22" cy="24" rx="8" ry="8" fill="#2d2d2d"/>
-    <ellipse cx="78" cy="24" rx="8" ry="8" fill="#2d2d2d"/>
-    <ellipse cx="50" cy="54" rx="36" ry="34" fill="#f0f0f0" stroke="rgba(0,242,255,0.2)" stroke-width="0.8"/>
-    <ellipse cx="33" cy="46" rx="12" ry="11" fill="#1a1a1a"/>
-    <ellipse cx="67" cy="46" rx="12" ry="11" fill="#1a1a1a"/>
-    <ellipse cx="33" cy="46" rx="8" ry="7.5" fill="white"/>
-    <ellipse cx="67" cy="46" rx="8" ry="7.5" fill="white"/>
-    <circle cx="34" cy="47" r="4" fill="#111"/>
-    <circle cx="68" cy="47" r="4" fill="#111"/>
-    <circle cx="36" cy="45" r="1.5" fill="white"/>
-    <circle cx="70" cy="45" r="1.5" fill="white"/>
-    <rect x="22" y="39" width="22" height="16" rx="8" ry="8" fill="none" stroke="#00f2ff" stroke-width="1.8"/>
-    <rect x="56" y="39" width="22" height="16" rx="8" ry="8" fill="none" stroke="#00f2ff" stroke-width="1.8"/>
-    <line x1="44" y1="47" x2="56" y2="47" stroke="#00f2ff" stroke-width="1.8" stroke-linecap="round"/>
-    <line x1="22" y1="47" x2="14" y2="44" stroke="#00f2ff" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="78" y1="47" x2="86" y2="44" stroke="#00f2ff" stroke-width="1.5" stroke-linecap="round"/>
-    <ellipse cx="50" cy="57" rx="5" ry="3.5" fill="#ff8fb0"/>
-    <path d="M42 63 Q50 70 58 63" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round"/>
-    <ellipse cx="24" cy="62" rx="7" ry="4" fill="rgba(255,143,176,0.25)"/>
-    <ellipse cx="76" cy="62" rx="7" ry="4" fill="rgba(255,143,176,0.25)"/>
-    <rect x="28" y="82" width="44" height="26" rx="4" fill="#1a1a1a" stroke="rgba(0,242,255,0.4)" stroke-width="1"/>
-    <rect x="31" y="84" width="38" height="18" rx="2" fill="#0a0a0a"/>
-    <line x1="34" y1="88" x2="50" y2="88" stroke="#00f2ff" stroke-width="1.2" stroke-linecap="round"/>
-    <line x1="34" y1="91" x2="44" y2="91" stroke="#7000ff" stroke-width="1.2" stroke-linecap="round"/>
-    <line x1="34" y1="94" x2="48" y2="94" stroke="#ff007a" stroke-width="1.2" stroke-linecap="round"/>
-    <line x1="34" y1="97" x2="42" y2="97" stroke="#00f2ff" stroke-width="1.2" stroke-linecap="round"/>
-    <rect x="51" y="87" width="1.5" height="8" rx="1" fill="#00f2ff" opacity="0.9">
-      <animate attributeName="opacity" values="0.9;0;0.9" dur="1s" repeatCount="indefinite"/>
-    </rect>
-    <rect x="26" y="107" width="48" height="4" rx="2" fill="#222"/>
-  </svg>
+<!-- ═══ HI BUBBLE (About Me Modal) ═══ -->
+<div class="hi-overlay" id="hiOverlay" onclick="closeHi()"></div>
+<div class="hi-bubble" id="hi-bubble">
+  <button class="hi-bubble-close" onclick="closeHi()">×</button>
+  <div class="hi-bubble-name">HI, I'M <span>KRUTHI</span> 👋</div>
+  <div class="hi-bubble-role">CSE Engineer · AI/ML · Full-Stack · DSA</div>
+  <div class="hi-bubble-text">
+    <p>I'm a <strong>Computer Science Engineering student</strong> passionate about <strong>AI/ML, Full-Stack Development, and Data Structures & Algorithms</strong>. I work with Python, Java, SQL, and Node.js, focusing on building intelligent and scalable real-world applications.</p>
+    <p>I've participated in <strong>4 hackathons</strong> — earning 2x Hackathon Winner and 2× Round 2 Qualifier titles — developing innovative solutions in collaborative environments. My projects include a <strong>Face Recognition System</strong>, AI applications using <strong>Retrieval-Augmented Generation (RAG)</strong>, and other machine learning solutions.</p>
+    <p>Certified in <strong>Machine Learning and Generative AI</strong>. Joining <strong>Megha Engineering & Infrastructure Ltd.</strong> as an IT Intern in May 2026.</p>
+  </div>
+  <div class="hi-bubble-chips">
+    <span class="hi-chip a">AI / ML</span>
+    <span class="hi-chip a">RAG Systems</span>
+    <span class="hi-chip b">Full-Stack</span>
+    <span class="hi-chip b">Node.js · Vue.js</span>
+    <span class="hi-chip c">DSA</span>
+    <span class="hi-chip c">4× Hackathons</span>
+  </div>
+</div>
+
+<!-- ═══ CUTE PANDA MASCOT (improved) ═══ -->
+<div class="panda-wrap" id="pandaWrap">
+  <div class="panda-speech" id="pandaSpeech"></div>
+  <button class="panda-btn" onclick="pandaTalk()" title="Talk to Panda!">
+    <svg viewBox="0 0 110 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Glow filter -->
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="softglow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <radialGradient id="bodyGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#f5f5f5"/>
+          <stop offset="100%" stop-color="#d8d8d8"/>
+        </radialGradient>
+        <radialGradient id="earGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#2a2a2a"/>
+          <stop offset="100%" stop-color="#111"/>
+        </radialGradient>
+        <radialGradient id="eyeGrad" cx="40%" cy="35%" r="55%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="100%" stop-color="#050505"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Ears (behind head) -->
+      <ellipse cx="22" cy="24" rx="16" ry="16" fill="url(#earGrad)" filter="url(#glow)"/>
+      <ellipse cx="88" cy="24" rx="16" ry="16" fill="url(#earGrad)" filter="url(#glow)"/>
+      <!-- Ear inner glow -->
+      <ellipse cx="22" cy="24" rx="9" ry="9" fill="#2d2d2d"/>
+      <ellipse cx="88" cy="24" rx="9" ry="9" fill="#2d2d2d"/>
+      <!-- Cyan ear rings -->
+      <circle cx="22" cy="24" r="14" fill="none" stroke="rgba(0,242,255,0.35)" stroke-width="1" filter="url(#glow)"/>
+      <circle cx="88" cy="24" r="14" fill="none" stroke="rgba(0,242,255,0.35)" stroke-width="1" filter="url(#glow)"/>
+
+      <!-- Main head/body -->
+      <ellipse cx="55" cy="58" rx="38" ry="36" fill="url(#bodyGrad)" filter="url(#softglow)"/>
+      <!-- Body glow ring -->
+      <ellipse cx="55" cy="58" rx="38" ry="36" fill="none" stroke="rgba(0,242,255,0.15)" stroke-width="1.5"/>
+
+      <!-- Eye patches -->
+      <ellipse cx="38" cy="50" rx="13" ry="12" fill="url(#eyeGrad)" filter="url(#glow)"/>
+      <ellipse cx="72" cy="50" rx="13" ry="12" fill="url(#eyeGrad)" filter="url(#glow)"/>
+
+      <!-- Glasses frames -->
+      <rect x="25" y="42" width="24" height="17" rx="8" ry="8" fill="none" stroke="#00f2ff" stroke-width="2" filter="url(#glow)"/>
+      <rect x="61" y="42" width="24" height="17" rx="8" ry="8" fill="none" stroke="#00f2ff" stroke-width="2" filter="url(#glow)"/>
+      <!-- Bridge -->
+      <line x1="49" y1="50.5" x2="61" y2="50.5" stroke="#00f2ff" stroke-width="2" stroke-linecap="round" filter="url(#glow)"/>
+      <!-- Temples -->
+      <line x1="25" y1="50.5" x2="16" y2="47" stroke="#00f2ff" stroke-width="1.8" stroke-linecap="round" filter="url(#glow)"/>
+      <line x1="85" y1="50.5" x2="94" y2="47" stroke="#00f2ff" stroke-width="1.8" stroke-linecap="round" filter="url(#glow)"/>
+
+      <!-- Eye whites -->
+      <ellipse cx="38" cy="50" rx="8.5" ry="8" fill="white"/>
+      <ellipse cx="72" cy="50" rx="8.5" ry="8" fill="white"/>
+      <!-- Pupils -->
+      <circle cx="39" cy="51" r="4.5" fill="#111"/>
+      <circle cx="73" cy="51" r="4.5" fill="#111"/>
+      <!-- Eye shine -->
+      <circle cx="41" cy="49" r="1.8" fill="white"/>
+      <circle cx="75" cy="49" r="1.8" fill="white"/>
+      <!-- Pupil glow -->
+      <circle cx="39" cy="51" r="4.5" fill="none" stroke="rgba(0,242,255,0.3)" stroke-width="0.8"/>
+      <circle cx="73" cy="51" r="4.5" fill="none" stroke="rgba(0,242,255,0.3)" stroke-width="0.8"/>
+
+      <!-- Nose -->
+      <ellipse cx="55" cy="61" rx="5.5" ry="4" fill="#ffaac8"/>
+
+      <!-- Smile -->
+      <path d="M46 67 Q55 75 64 67" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+
+      <!-- Blush -->
+      <ellipse cx="28" cy="66" rx="8" ry="5" fill="rgba(255,143,176,0.3)"/>
+      <ellipse cx="82" cy="66" rx="8" ry="5" fill="rgba(255,143,176,0.3)"/>
+
+      <!-- Laptop -->
+      <rect x="28" y="88" width="54" height="28" rx="5" fill="#111" stroke="rgba(0,242,255,0.5)" stroke-width="1.2" filter="url(#glow)"/>
+      <!-- Screen -->
+      <rect x="32" y="91" width="46" height="20" rx="3" fill="#0a0a0a"/>
+      <!-- Code lines -->
+      <line x1="36" y1="95" x2="54" y2="95" stroke="#00f2ff" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+      <line x1="36" y1="99" x2="46" y2="99" stroke="#7000ff" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="36" y1="103" x2="51" y2="103" stroke="#ff007a" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="36" y1="107" x2="44" y2="107" stroke="#00f2ff" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+      <!-- Cursor blink -->
+      <rect x="55" y="93" width="2" height="10" rx="1" fill="#00f2ff" filter="url(#glow)">
+        <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+      </rect>
+      <!-- Laptop base -->
+      <rect x="24" y="114" width="62" height="5" rx="2.5" fill="#1a1a1a"/>
+
+      <!-- Floating code particles -->
+      <circle cx="100" cy="45" r="2" fill="#00f2ff" opacity="0.6" filter="url(#glow)">
+        <animate attributeName="cy" values="45;35;45" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;0.1;0.6" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="8" cy="60" r="1.5" fill="#7000ff" opacity="0.5">
+        <animate attributeName="cy" values="60;50;60" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="104" cy="75" r="1.8" fill="#ff007a" opacity="0.4">
+        <animate attributeName="cy" values="75;65;75" dur="4s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+  </button>
 </div>
 
 <!-- SIDEBAR NAV -->
 <nav>
   <a href="#home"><i data-lucide="home"></i><span class="nav-tip">HOME</span></a>
+  <a href="#about"><i data-lucide="user"></i><span class="nav-tip">ABOUT</span></a>
   <a href="#education"><i data-lucide="graduation-cap"></i><span class="nav-tip">EDUCATION</span></a>
   <a href="#experience"><i data-lucide="terminal"></i><span class="nav-tip">EXPERIENCE</span></a>
   <a href="#projects"><i data-lucide="layers"></i><span class="nav-tip">PROJECTS</span></a>
   <a href="#skills"><i data-lucide="cpu"></i><span class="nav-tip">SKILLS</span></a>
   <a href="#achievements"><i data-lucide="trophy"></i><span class="nav-tip">WINS</span></a>
-  <a href="#thoughts"><i data-lucide="radio"></i><span class="nav-tip">THOUGHTS</span></a>
   <a href="#contact"><i data-lucide="send"></i><span class="nav-tip">CONTACT</span></a>
 </nav>
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="profile-wrap" onclick="sayHi()">
+  <div class="profile-wrap" onclick="sayHi()" style="cursor:none;">
     <div class="profile-ring">
       <img src="./ChatGPT Image Mar 31, 2026, 11_25_54 AM.png" alt="Kruthi">
     </div>
-    <div class="hi-bubble" id="hi-bubble">HI, I'M KRUTHI! 👋</div>
   </div>
   <h1 class="reveal">KRUTHI<span>.</span></h1>
   <p class="tagline reveal d1">CSE Engineer · AI Systems · Digital Architect</p>
@@ -360,13 +548,64 @@ footer{border-top:1px solid var(--border);padding:36px 60px;display:flex;justify
     <a href="https://linkedin.com/in/kruthi-bandarupalli" target="_blank"><i data-lucide="linkedin" size="16"></i> LINKEDIN</a>
     <a href="https://github.com/kruthi" target="_blank"><i data-lucide="github" size="16"></i> GITHUB</a>
     <a href="mailto:kruthibandarupalli17@gmail.com"><i data-lucide="mail" size="16"></i> EMAIL ME</a>
-    <a href="tel:+919711253851"><i data-lucide="phone" size="16"></i> CALL</a>
+    <a href="#about" onclick="scrollToAbout(event)"><i data-lucide="user" size="16"></i> ABOUT ME</a>
   </div>
   <div class="scroll-hint"><div class="scroll-line"></div>SCROLL</div>
 </section>
 
 <!-- MAIN CONTENT -->
 <div class="container">
+
+  <!-- ABOUT ME -->
+  <section id="about" style="margin-bottom:100px;">
+    <h2 class="section-title reveal"><i data-lucide="user"></i> ABOUT_ME</h2>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I am a <strong>Computer Science Engineering student</strong> passionate about <strong>AI/ML, Full-Stack Development, and Data Structures & Algorithms</strong>. I work with Python, Java, SQL, and Node.js, focusing on building intelligent and scalable real-world applications.</p>
+        <p>I have participated in <strong>4 hackathons</strong>, becoming a <strong>2x Hackathon Winner and 2× Round 2 Qualifier</strong>, where I developed innovative solutions in collaborative environments. My projects include a <strong>Face Recognition System</strong> and AI-based applications using <strong>Retrieval-Augmented Generation (RAG)</strong>, along with other machine learning solutions.</p>
+        <p>I am certified in <strong>Machine Learning and Generative AI</strong>, and continuously strengthening my DSA skills to design efficient systems. I will be joining <strong>Megha Engineering & Infrastructure Ltd.</strong> as an IT Intern in <strong>May 2026</strong>.</p>
+        <p>My goal is to combine AI/ML with strong development and problem-solving skills to create <strong>impactful, high-performance solutions</strong>.</p>
+      </div>
+      <div class="about-highlight reveal d1">
+        <div class="about-stat-row">
+          <div class="about-stat">
+            <div class="about-stat-num">4</div>
+            <div class="about-stat-label">Hackathons</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">2×</div>
+            <div class="about-stat-label">Winner</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">6+</div>
+            <div class="about-stat-label">Projects</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">8.58</div>
+            <div class="about-stat-label">GPA / 10</div>
+          </div>
+        </div>
+        <div class="about-joining">
+          <div class="about-joining-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8L6 7h12l-2-4z"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>
+          </div>
+          <div>
+            <div class="about-joining-label">Upcoming Role</div>
+            <div class="about-joining-val">IT Intern — Megha Engineering &amp; Infrastructure Ltd.</div>
+            <div class="about-joining-date">MAY 2026</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="proj-tag" style="border-color:rgba(0,242,255,.3);color:var(--accent);">AI / ML</span>
+          <span class="proj-tag" style="border-color:rgba(112,0,255,.3);color:#b47aff;">Full-Stack Dev</span>
+          <span class="proj-tag" style="border-color:rgba(255,0,122,.3);color:#ff6faa;">RAG Systems</span>
+          <span class="proj-tag">DSA · Algorithms</span>
+          <span class="proj-tag">Python · Java</span>
+          <span class="proj-tag">Node.js · Vue.js</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- EDUCATION -->
   <section id="education" style="margin-bottom:100px;">
@@ -869,10 +1108,6 @@ footer{border-top:1px solid var(--border);padding:36px 60px;display:flex;justify
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             <span class="clink-platform">EMAIL</span>kruthibandarupalli17@gmail.com
           </a>
-          <a href="tel:+919711253851" class="clink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.63 19.79 19.79 0 01.5 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.13 6.13l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            <span class="clink-platform">PHONE</span>+91 97112 53851
-          </a>
           <a href="https://linkedin.com/in/kruthi-bandarupalli" target="_blank" class="clink">
             <i data-lucide="linkedin" style="width:17px;height:17px;flex-shrink:0;"></i>
             <span class="clink-platform">LINKEDIN</span>linkedin.com/in/kruthi-bandarupalli
@@ -964,11 +1199,19 @@ footer{border-top:1px solid var(--border);padding:36px 60px;display:flex;justify
 
 lucide.createIcons();
 
-/* SPLASH */
+/* SPLASH — auto-scroll to about after dismiss */
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    document.getElementById('splash').classList.add('out');
-    setTimeout(()=>document.getElementById('splash').remove(),900);
+    const splash=document.getElementById('splash');
+    splash.classList.add('out');
+    setTimeout(()=>{
+      splash.remove();
+      // Auto-scroll to about section
+      const aboutEl=document.getElementById('about');
+      if(aboutEl){
+        aboutEl.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    },900);
   },2100);
 });
 
@@ -993,12 +1236,20 @@ document.addEventListener('mousemove',e=>{
   gsap.to('.profile-ring',{x,y,rotationY:x*1.5,rotationX:-y*1.5,duration:1,ease:'power2.out'});
 });
 
-/* HI BUBBLE */
+/* HI BUBBLE — About Me modal */
 function sayHi(){
-  const b=document.getElementById('hi-bubble');
-  b.style.display='block';
-  gsap.fromTo(b,{scale:0,opacity:0},{scale:1,opacity:1,duration:.4,ease:'back.out(1.7)'});
-  setTimeout(()=>gsap.to(b,{scale:0,opacity:0,duration:.3,onComplete:()=>b.style.display='none'}),2800);
+  document.getElementById('hi-bubble').classList.add('show');
+  document.getElementById('hiOverlay').classList.add('show');
+}
+function closeHi(){
+  document.getElementById('hi-bubble').classList.remove('show');
+  document.getElementById('hiOverlay').classList.remove('show');
+}
+
+/* Scroll to about */
+function scrollToAbout(e){
+  e.preventDefault();
+  document.getElementById('about').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 /* PANDA TALK */
@@ -1009,16 +1260,20 @@ const pandaMsgs=[
   '300+ CodeChef\nproblems solved! 💪',
   'SlideMentor was\nso cool to build! 🚀',
   'Top 50 SIH\nfinalist? LFG! 🏆',
+  'Click Kruthi\'s\nphoto for About Me! 📖',
 ];
 let pandaIdx=0;
+let pandaTimer=null;
 function pandaTalk(){
   const speech=document.getElementById('pandaSpeech');
-  speech.style.opacity='1';
+  if(pandaTimer)clearTimeout(pandaTimer);
   speech.textContent=pandaMsgs[pandaIdx%pandaMsgs.length];
   pandaIdx++;
-  gsap.fromTo(speech,{scale:.8,opacity:0},{scale:1,opacity:1,duration:.35,ease:'back.out(1.7)'});
-  setTimeout(()=>gsap.to(speech,{opacity:0,duration:.3}),3000);
+  speech.classList.add('visible');
+  pandaTimer=setTimeout(()=>speech.classList.remove('visible'),3200);
 }
+// Auto-greet after splash
+setTimeout(pandaTalk, 3200);
 
 /* SCROLL REVEAL */
 const revealObs=new IntersectionObserver(entries=>{
@@ -1043,7 +1298,7 @@ function submitMsg(btn){
 }
 
 /* ACTIVE NAV */
-const sectionIds=['home','education','experience','projects','skills','achievements','thoughts','contact'];
+const sectionIds=['home','about','education','experience','projects','skills','achievements','thoughts','contact'];
 window.addEventListener('scroll',()=>{
   const y=scrollY+200;
   sectionIds.forEach(id=>{
